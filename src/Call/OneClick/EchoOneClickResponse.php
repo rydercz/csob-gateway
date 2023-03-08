@@ -12,11 +12,15 @@ use function array_filter;
 class EchoOneClickResponse implements Response
 {
 
+	/**
+	 * @param mixed[] $extensions
+	 */
 	public function __construct(
 		private string $origPayId,
 		private DateTimeImmutable $responseDateTime,
 		private ResultCode $resultCode,
 		private string $resultMessage,
+		private array $extensions = [],
 	)
 	{
 		Validator::checkPayId($this->origPayId);
@@ -32,6 +36,7 @@ class EchoOneClickResponse implements Response
 			DateTimeImmutable::createFromFormat('YmdHis', $data['dttm']),
 			ResultCode::from($data['resultCode']),
 			$data['resultMessage'],
+			$data['extensions'],
 		);
 	}
 
@@ -79,6 +84,14 @@ class EchoOneClickResponse implements Response
 	public function getResultMessage(): string
 	{
 		return $this->resultMessage;
+	}
+
+	/**
+	 * @return mixed[]
+	 */
+	public function getExtensions(): array
+	{
+		return $this->extensions;
 	}
 
 }
